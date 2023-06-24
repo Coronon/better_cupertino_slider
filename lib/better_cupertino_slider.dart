@@ -313,7 +313,11 @@ class _BetterRenderCupertinoSlider extends RenderConstrainedBox {
     if (configure.useTapGesture) {
       return true;
     } else {
-      return (position.dx - _thumbCenter).abs() < configure.thumbRadius + configure.trackHorizontalPadding;
+      final hitRangeXFromCenter = configure.thumbRadius +
+          configure.thumbHorizontalInteractionPadding +
+          configure.trackHorizontalPadding;
+
+      return (position.dx - _thumbCenter).abs() <= hitRangeXFromCenter;
     }
   }
 
@@ -475,6 +479,11 @@ class BetterCupertinoSliderConfigure {
   final Color trackRightColor;
 
   final double thumbRadius;
+
+  /// Adds additional padding on the x axis to the thumb hit test
+  ///
+  /// Useful to make interaction easier when [thumbRadius] is small.
+  final double thumbHorizontalInteractionPadding;
   final BetterCupertinoThumbPainter thumbPainter;
 
   const BetterCupertinoSliderConfigure({
@@ -485,6 +494,7 @@ class BetterCupertinoSliderConfigure {
     this.trackLeftColor = const Color(0xFFFF6B26),
     this.trackRightColor = const Color(0xFFE3E9EF),
     this.thumbRadius = 8.0,
+    this.thumbHorizontalInteractionPadding = 5.0,
     this.thumbPainter = defaultThumbPainter,
   });
 
@@ -496,6 +506,7 @@ class BetterCupertinoSliderConfigure {
     Color? trackLeftColor,
     Color? trackRightColor,
     double? thumbRadius,
+    double? thumbHorizontalInteractionPadding,
     BetterCupertinoThumbPainter? thumbPainter,
   }) {
     return BetterCupertinoSliderConfigure(
@@ -506,6 +517,8 @@ class BetterCupertinoSliderConfigure {
       trackLeftColor: trackLeftColor ?? this.trackLeftColor,
       trackRightColor: trackRightColor ?? this.trackRightColor,
       thumbRadius: thumbRadius ?? this.thumbRadius,
+      thumbHorizontalInteractionPadding: thumbHorizontalInteractionPadding ??
+          this.thumbHorizontalInteractionPadding,
       thumbPainter: thumbPainter ?? this.thumbPainter,
     );
   }
